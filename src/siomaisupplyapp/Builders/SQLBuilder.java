@@ -1,5 +1,9 @@
 package siomaisupplyapp.Builders;
 
+/**
+ *
+ * @author Laptop ni CC
+ */
 abstract public class SQLBuilder {
     String command;
 

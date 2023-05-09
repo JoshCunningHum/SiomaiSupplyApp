@@ -10,6 +10,7 @@ import java.util.WeakHashMap;
 /**
  *
  * @author Josh
+ * @param <N> SQLBuilder subclasses that needs the where conditional statement
  */
 public interface Conditional<N extends Conditional<N>>{
 

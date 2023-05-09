@@ -10,15 +10,40 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import siomaisupplyapp.Builders.Updatable;
+import siomaisupplyapp.Builders.UpdateMap;
 /**
  *
  * @author Josh
  */
-public class Kitten {
+public class Kitten implements Updatable{
+
+    @Override
+    public UpdateMap genUpdateMap(Object updatedValue) {
+        if(!(updatedValue instanceof Kitten)) return null;
+        
+        Kitten o = (Kitten) updatedValue;
+        UpdateMap um = new UpdateMap("kitten");
+        
+        if(id != o.id) System.out.println(String.format("Kitten: %s:%d is updated with the value of %s:%d", name, id, o.name, o.id));
+        
+        if(status != o.status) um.set("status", o.status);
+        else um.set("status", 0);
+        
+        if(!name.equals(o.name)) um.set("name", o.name);
+        if(!breed.equals(o.breed)) um.set("breed", o.breed);
+        if(!description.equals(o.description)) um.set("description", o.description);
+        if(!birthdate.equals(o.birthdate)) um.set("birthdate", o.birthdate.toString());
+        
+        um.whereEqual("kitten_id", id);
+        
+        return um;
+    }
+    
     public enum STATUS {
-        AVAILABLE ,
+        UNAVAILABLE,
         PROCESSING,
-        UNAVAILABLE
+        AVAILABLE ,
     }
     
     private int id, status;
@@ -40,6 +65,15 @@ public class Kitten {
     public Kitten(int status, String name) {
         this.status = status;
         this.name = name;
+    }
+    
+    public void copy(Kitten other){
+        id = other.id;
+        status = other.id;
+        name = other.name;
+        breed = other.breed;
+        description = other.description;
+        birthdate = other.birthdate;
     }
 
     public int getId() {
@@ -89,7 +123,9 @@ public class Kitten {
     public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
     }
-
+    
+    
+    
     @Override
     public boolean equals(Object o) {
         if(!(o instanceof Kitten)) return false;

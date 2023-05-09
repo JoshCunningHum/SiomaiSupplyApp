@@ -39,6 +39,7 @@ public class AdminFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         pnlHeader = new javax.swing.JPanel();
         btnLogOut = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -58,6 +59,8 @@ public class AdminFrame extends javax.swing.JFrame {
         inpBirth = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         inpDesc = new javax.swing.JTextArea();
+        cmbStatus = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         btnCreate = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
@@ -88,9 +91,9 @@ public class AdminFrame extends javax.swing.JFrame {
         pnlHeaderLayout.setHorizontalGroup(
             pnlHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlHeaderLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(219, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 218, Short.MAX_VALUE)
                 .addComponent(btnLogOut)
                 .addContainerGap())
         );
@@ -151,6 +154,10 @@ public class AdminFrame extends javax.swing.JFrame {
         inpDesc.setRows(5);
         jScrollPane2.setViewportView(inpDesc);
 
+        cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AVAILABLE", "PROCESSING", "UNAVAILABLE" }));
+
+        jLabel7.setText("Status: ");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -171,21 +178,29 @@ public class AdminFrame extends javax.swing.JFrame {
                             .addComponent(inpName)
                             .addComponent(inpBirth)
                             .addComponent(inpBreed))
-                        .addGap(256, 256, 256))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
-                        .addContainerGap())))
+                        .addGap(150, 150, 150)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane2))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(inpID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(inpName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(inpID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(inpName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -198,10 +213,8 @@ public class AdminFrame extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addGap(70, 111, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2)))
         );
 
         jPanel1.add(jPanel3);
@@ -214,11 +227,17 @@ public class AdminFrame extends javax.swing.JFrame {
         });
 
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         btnDelete.setText("Delete");
 
         output.setForeground(new java.awt.Color(255, 51, 51));
         output.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        output.setText(" ");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -239,7 +258,7 @@ public class AdminFrame extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 143, Short.MAX_VALUE)
+                .addGap(0, 113, Short.MAX_VALUE)
                 .addComponent(output)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -262,7 +281,7 @@ public class AdminFrame extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 419, Short.MAX_VALUE)
+            .addGap(0, 434, Short.MAX_VALUE)
         );
 
         pnlBody.addTab("Adoptions", jPanel2);
@@ -272,6 +291,10 @@ public class AdminFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private String getInput(String input){
+        return getInput(input, false);
+    }
+    
     private String getInput(String input, boolean nullable){
         JTextField target = null;
         
@@ -312,7 +335,14 @@ public class AdminFrame extends javax.swing.JFrame {
         if(!id.equals("")) k.setId(Integer.parseInt(id));
         k.setName(name);
         if(!breed.equals("")) k.setBreed(breed);
-        k.setBirthdate(Date.valueOf(birth));
+        try{
+            Date parseDate = Date.valueOf(birth);
+            k.setBirthdate(parseDate);
+        }catch (IllegalArgumentException e){
+            output.setText("Wrong date format. Use (YYYY-MM-DD)");
+            return null;
+        }
+        
         if(!desc.equals("")) k.setDescription(desc);
         
         return k;
@@ -339,6 +369,25 @@ public class AdminFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_inpNameActionPerformed
 
+    
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        String displayed_id = getInput("id") ;
+        
+        if(displayed_id == null) return;
+        
+        int id = Integer.parseInt(displayed_id);
+        
+        // find the original kitten
+        Kitten original = active_kittens.get(id),
+               updated = getInputAsKitten();
+        
+        // Generate input map and update the kitten in the database
+        SiomaiSupplyApp.c.updateKitten(original.genUpdateMap(updated));
+        original.copy(updated);
+        setKittenList(active_kittens);
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
     public void setKittenList(KittenList list){
         listKittenModel.clear();
         active_kittens = list;
@@ -356,13 +405,14 @@ public class AdminFrame extends javax.swing.JFrame {
         
         // event when clicking on a list item here
         Kitten s = active_kittens.get(id);
-        if(s.equals(null)) return;
+        if(s == null) return;
         
         inpID.setText(s.getId() + "");
         inpName.setText(s.getName());
         inpBreed.setText(s.getBreed());
         inpBirth.setText(s.getBirthdate().toString());
         inpDesc.setText(s.getDescription());
+        cmbStatus.setSelectedIndex(s.getStatus());
     }
     
     /**
@@ -405,6 +455,7 @@ public class AdminFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnLogOut;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JComboBox<String> cmbStatus;
     private javax.swing.JTextField inpBirth;
     private javax.swing.JTextField inpBreed;
     private javax.swing.JTextArea inpDesc;
@@ -416,12 +467,14 @@ public class AdminFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private final javax.swing.JList<String> listKitten = new javax.swing.JList<String>();
     private javax.swing.JLabel output;
     private javax.swing.JTabbedPane pnlBody;

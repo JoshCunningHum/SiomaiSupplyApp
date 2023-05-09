@@ -14,6 +14,7 @@ import siomaisupplyapp.Entities.Adopter;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import siomaisupplyapp.Builders.UpdateMap;
 
 
 /**
@@ -98,6 +99,24 @@ public class Connect {
         return null;
     }
     
+    private boolean update(String sql){
+        Statement s;
+        
+        try {
+            s = c.createStatement();
+            s.executeUpdate(sql);
+            return true;
+        }catch (SQLException ex){
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return false;
+    }
+    
+    private boolean update(UpdateMap um){
+        return update(um.toString());
+    }
+    
     // SIOMAI SUPPLY APP METHODS
     
     // Query Kittens
@@ -138,6 +157,10 @@ public class Connect {
     }
     // Remove Kitten
     // Update Kitten
+    public boolean updateKitten(UpdateMap u){
+        // looks very useless tbh
+        return update(u);
+    }
     // Query With Filter and Sort
     
     // Query All Kittens that fits in the page
