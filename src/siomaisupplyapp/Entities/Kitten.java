@@ -17,6 +17,7 @@ import siomaisupplyapp.Builders.UpdateMap;
  * @author Josh
  */
 public class Kitten implements Updatable{
+    public static final int pWidth = 150, pHeight = 150;
 
     @Override
     public UpdateMap genUpdateMap(Object updatedValue) {
@@ -41,9 +42,9 @@ public class Kitten implements Updatable{
     }
     
     public enum STATUS {
-        UNAVAILABLE,
+        AVAILABLE,
         PROCESSING,
-        AVAILABLE ,
+        UNAVAILABLE,
     }
     
     private int id, status;
@@ -69,7 +70,7 @@ public class Kitten implements Updatable{
     
     public void copy(Kitten other){
         id = other.id;
-        status = other.id;
+        status = other.status;
         name = other.name;
         breed = other.breed;
         description = other.description;
@@ -125,6 +126,15 @@ public class Kitten implements Updatable{
     }
     
     
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("[").append(status).append("] ").append(name).append(" - ").append(id).append("\n");
+        sb.append(breed).append("\n");
+        sb.append(birthdate.toString()).append("\n");
+        sb.append(description).append("\n");
+        
+        return sb.toString();
+    }
     
     @Override
     public boolean equals(Object o) {
@@ -145,9 +155,6 @@ public class Kitten implements Updatable{
         
         JButton view = new JButton("View More");
         view.setVerticalAlignment(JButton.BOTTOM);
-        
-        JPanel desc = new JPanel();
-        desc.setLayout(new BoxLayout(desc, BoxLayout.Y_AXIS));
         
         JLabel jlName = new JLabel(name),
                jlBreed = new JLabel(breed),
@@ -185,6 +192,7 @@ public class Kitten implements Updatable{
                 .addComponent(view)
                 .addContainerGap())
         );
+        
         
         return p;
     }

@@ -215,7 +215,6 @@ public class LoginFrame extends javax.swing.JFrame {
                 f.setLocationRelativeTo(this);
                 f.setVisible(true);
                 
-                f.displayKittens(SiomaiSupplyApp.c.queryKittens(15, 0));
                 
                 this.dispose();
             }

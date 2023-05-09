@@ -36,4 +36,11 @@ public class KittenList {
     public void clear(){
         kittens.clear();
     }
+    
+    public void displayAll(){
+        System.out.println("---- Printing Kittens --------");
+        for(Kitten k : kittens){
+            System.out.println(k.toString());
+        }
+    }
 }

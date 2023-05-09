@@ -4,16 +4,20 @@
  */
 package siomaisupplyapp.Frames;
 
+import javax.swing.JPanel;
 import siomaisupplyapp.Entities.Kitten;
 import siomaisupplyapp.Entities.KittenList;
+import siomaisupplyapp.SiomaiSupplyApp;
 
 /**
  *
  * @author Josh
  */
 public class HubFrame extends javax.swing.JFrame {
-
+    
+    int kp_width, kp_height, limit = 15, max_rows = 3, max_cols = 5;
     String username;
+    KittenList active_kittens;
     
     /**
      * Creates new form HubFrame
@@ -21,6 +25,12 @@ public class HubFrame extends javax.swing.JFrame {
     public HubFrame(String username) {
         initComponents();
         this.username = username;
+        
+        kp_width = pnlKittens.getWidth();
+        kp_height = pnlKittens.getHeight();
+        
+        
+        displayKittens(SiomaiSupplyApp.c.queryKittens(limit, 0));
     }
 
     /**
@@ -31,7 +41,11 @@ public class HubFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
+        jPanel3 = new javax.swing.JPanel();
+        jScrollBar1 = new javax.swing.JScrollBar();
+        jPanel2 = new javax.swing.JPanel();
         pnlHeader = new javax.swing.JPanel();
         btnSupport = new javax.swing.JButton();
         btnCarrier = new javax.swing.JButton();
@@ -41,14 +55,41 @@ public class HubFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         cmbSort = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnNext = new javax.swing.JButton();
+        btnPrev = new javax.swing.JButton();
         pnlKittens = new javax.swing.JPanel();
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(750, 500));
         setPreferredSize(new java.awt.Dimension(750, 500));
         setSize(new java.awt.Dimension(750, 500));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
 
         pnlHeader.setBackground(new java.awt.Color(0, 51, 51));
         pnlHeader.setPreferredSize(new java.awt.Dimension(750, 50));
@@ -105,12 +146,22 @@ public class HubFrame extends javax.swing.JFrame {
         jLabel3.setText("Sort By ");
 
         cmbSort.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Age", "Name", "Breed"}));
+        cmbSort.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbSortActionPerformed(evt);
+            }
+        });
 
-        jButton1.setText(">");
-        jButton1.setEnabled(false);
+        btnNext.setText(">");
+        btnNext.setEnabled(false);
 
-        jButton2.setText("<");
-        jButton2.setEnabled(false);
+        btnPrev.setText("<");
+        btnPrev.setEnabled(false);
+        btnPrev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -122,9 +173,9 @@ public class HubFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbSort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 568, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(btnPrev)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(btnNext)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -134,15 +185,15 @@ public class HubFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(cmbSort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btnNext)
+                    .addComponent(btnPrev))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnlBody.add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
         pnlKittens.setBackground(new java.awt.Color(153, 153, 153));
-        pnlKittens.setLayout(new java.awt.GridLayout(3, 5, 10, 10));
+        pnlKittens.setLayout(new java.awt.GridLayout());
         pnlBody.add(pnlKittens, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(pnlBody, java.awt.BorderLayout.CENTER);
@@ -154,13 +205,42 @@ public class HubFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSupportActionPerformed
 
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPrevActionPerformed
+
+    private void cmbSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSortActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbSortActionPerformed
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        // TODO add your handling code here:
+        kp_width = pnlKittens.getWidth();
+        kp_height = pnlKittens.getHeight();
+        
+        max_cols = kp_width / Kitten.pWidth;
+        max_rows = kp_height / Kitten.pHeight;
+        limit = max_cols * max_rows;
+        
+        
+        // TODO: RE-ADjust Margins
+        displayKittens(SiomaiSupplyApp.c.queryKittens(limit, 0));
+        
+        System.out.println(max_cols + " " + max_rows + " " + limit);
+        active_kittens.displayAll();
+    }//GEN-LAST:event_formComponentResized
+
     public void displayKittens(KittenList list){
+        int count = 0, cols = max_cols, width = Kitten.pWidth, height = Kitten.pHeight;
+        
+        pnlKittens.removeAll();
+        active_kittens = list;
         for(Kitten k : list.kittens){
-            pnlKittens.add(k.getPanelComponent());
-            pnlKittens.add(k.getPanelComponent());
-            pnlKittens.add(k.getPanelComponent());
-            pnlKittens.add(k.getPanelComponent());
-            pnlKittens.add(k.getPanelComponent());
+            JPanel p = k.getPanelComponent();
+            p.setBounds(width * (count % cols), height * (count / cols), width, height);
+            
+            pnlKittens.add(p);
+            count++;
         }
     }
     
@@ -202,13 +282,16 @@ public class HubFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAccount;
     private javax.swing.JButton btnCarrier;
+    private javax.swing.JButton btnNext;
+    private javax.swing.JButton btnPrev;
     private javax.swing.JButton btnSupport;
     private javax.swing.JComboBox<String> cmbSort;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JPanel pnlBody;
     private javax.swing.JPanel pnlHeader;
     private javax.swing.JPanel pnlKittens;

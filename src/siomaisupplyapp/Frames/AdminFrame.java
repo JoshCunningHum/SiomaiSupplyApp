@@ -329,11 +329,14 @@ public class AdminFrame extends javax.swing.JFrame {
                birth = getInput("birth", false),
                desc = inpDesc.getText();
         
+        int status = cmbStatus.getSelectedIndex();
+        
         if(name == null || birth == null) return null;
         
         Kitten k = new Kitten();
         if(!id.equals("")) k.setId(Integer.parseInt(id));
         k.setName(name);
+        k.setStatus(status);
         if(!breed.equals("")) k.setBreed(breed);
         try{
             Date parseDate = Date.valueOf(birth);
