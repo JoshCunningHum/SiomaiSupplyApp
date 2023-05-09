@@ -35,6 +35,11 @@ public interface Conditional<N extends Conditional<N>>{
     default UnfinishedWhereClause<N> or(){
         return new UnfinishedWhereClause<N>(this, "or");
     }
+
+    default N like(String column, Object value){
+        String v = (value instanceof String) ? "'" + value + "'" : value.toString();
+        return where(column + " LIKE " + v);
+    }
     
     default N whereEqual(String column, Object value){
         String v = (value instanceof String) ? "'" + value + "'" : value.toString();
@@ -86,6 +91,7 @@ public interface Conditional<N extends Conditional<N>>{
     }
     
     default String getCondtionString(){
+        if(isEmptyCondition()) return "";
         return " WHERE " + whrs();
     }
 }

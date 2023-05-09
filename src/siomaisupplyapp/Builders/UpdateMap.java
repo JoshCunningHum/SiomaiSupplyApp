@@ -10,6 +10,7 @@ package siomaisupplyapp.Builders;
  */
 public class UpdateMap extends SQLBuilder implements Conditional<UpdateMap>{
     
+    StringBuilder updates = new StringBuilder();
     String table;
 
     public UpdateMap(String table){
@@ -18,8 +19,12 @@ public class UpdateMap extends SQLBuilder implements Conditional<UpdateMap>{
     }
 
     public UpdateMap set(String column, Object value){
-
+        if(!updates.isEmpty()) updates.append(", ");
+        updates.append(column).append(" = ").append(parseObject(value)); 
         return this;
     }
     
+    public String toString(){
+        return super.toString() + table + " SET " + updates + getCondtionString();
+    }
 }

@@ -59,8 +59,8 @@ public class Query extends SQLBuilder implements Conditional<Query>{
         String c = (cols.isEmpty() ? "*" : cols.toString());
         StringBuilder res = new StringBuilder();
         
-        res.append("select ").append(c).append(" from ").append(table);
-        if(!isEmptyCondition()) res.append(getCondtionString());
+        res.append(super.toString()).append(c).append(" from ").append(table);
+        res.append(getCondtionString());
         if(!ordr.isEmpty()) res.append(" ORDER BY ").append(ordr);
         if(limit > 0) res.append(" LIMIT ").append(limit);
         if(offset > 0) res.append(" OFFSET ").append(offset);

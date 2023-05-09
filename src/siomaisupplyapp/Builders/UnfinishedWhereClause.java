@@ -23,6 +23,11 @@ public class UnfinishedWhereClause<N extends Conditional<N>>{
         q.whrs().append(operator).append(" ").append(clause).append(" ");
         return q;
     }
+
+    public Conditional<N> like(String column, Object value){
+        String v = (value instanceof String) ? "'" + value + "'" : value.toString();
+        return where(column + " LIKE " + v);
+    }
     
     public Conditional<N> whereEqual(String column, Object value){
         String v = (value instanceof String) ? "'" + value + "'" : value.toString();

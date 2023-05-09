@@ -14,6 +14,6 @@ abstract public class SQLBuilder {
     }
 
     public String toString(){
-        return command;
+        return command + " ";
     }
 }
