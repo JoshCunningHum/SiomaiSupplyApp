@@ -5,7 +5,6 @@
 package siomaisupplyapp.Frames;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import siomaisupplyapp.Entities.Adopter;
 import siomaisupplyapp.Entities.Staff;
 import siomaisupplyapp.Entities.User;

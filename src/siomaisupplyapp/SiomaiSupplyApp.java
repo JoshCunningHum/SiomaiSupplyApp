@@ -4,8 +4,6 @@
  */
 package siomaisupplyapp;
 
-import siomaisupplyapp.Connect.LOGIN;
-import siomaisupplyapp.Frames.HubFrame;
 import siomaisupplyapp.Frames.LoginFrame;
 
 /**

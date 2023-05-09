@@ -11,7 +11,8 @@ import java.util.WeakHashMap;
  *
  * @author Josh
  */
-public interface Conditional {
+public interface Conditional<N extends Conditional<N>>{
+
     class Storage{
         private static final Map<Conditional, StringBuilder> whrs = new WeakHashMap<>();
     }
@@ -22,61 +23,61 @@ public interface Conditional {
         return Storage.whrs.get(this);
     }
     
-    default Conditional where(String clause){
+    default N where(String clause){
         whrs().append(clause).append(" ");
-        return this;
+        return (N) this;
     }
     
-    default UnfinishedWhereClause and(){
-        return new UnfinishedWhereClause(this, "and");
+    default UnfinishedWhereClause<N> and(){
+        return new UnfinishedWhereClause<N>(this, "and");
     }
     
-    default UnfinishedWhereClause or(){
-        return new UnfinishedWhereClause(this, "or");
+    default UnfinishedWhereClause<N> or(){
+        return new UnfinishedWhereClause<N>(this, "or");
     }
     
-    default Conditional whereEqual(String column, Object value){
+    default N whereEqual(String column, Object value){
         String v = (value instanceof String) ? "'" + value + "'" : value.toString();
         return where(column + "=" + v);
     }
     
-    default Conditional whereNot(String column, Object value){
+    default N whereNot(String column, Object value){
         String v = (value instanceof String) ? "'" + value + "'" : value.toString();
         return where(column + "<>" + v);
     }
     
-    default Conditional whereLess(String column, int value){
+    default N whereLess(String column, int value){
        return where(column + "<" + value);
     }
     
-    default Conditional whereLess(String column, double value){
+    default N whereLess(String column, double value){
        return where(column + "<" + value);
     }
     
     
-    default Conditional whereLessEqual(String column, int value){
+    default N whereLessEqual(String column, int value){
        return where(column + "<=" + value);
     }
     
-    default Conditional whereLessEqual(String column, double value){
+    default N whereLessEqual(String column, double value){
        return where(column + "<=" + value);
     }
     
     
-    default Conditional whereGreater(String column, int value){
+    default N whereGreater(String column, int value){
        return where(column + ">" + value);
     }
     
-    default Conditional whereGreater(String column, double value){
+    default N whereGreater(String column, double value){
        return where(column + ">" + value);
     }
     
     
-    default Conditional whereGreaterEqual(String column, int value){
+    default N whereGreaterEqual(String column, int value){
        return where(column + ">=" + value);
     }
     
-    default Conditional whereGreaterEqual(String column, double value){
+    default N whereGreaterEqual(String column, double value){
        return where(column + ">=" + value);
     }
     

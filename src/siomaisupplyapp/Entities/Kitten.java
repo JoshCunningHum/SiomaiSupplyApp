@@ -10,7 +10,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 /**
  *
  * @author Josh
@@ -105,8 +104,6 @@ public class Kitten {
     
     
     public JPanel getPanelComponent(){
-        int padding = 10;
-        
         JPanel p = new JPanel();
         p.setBackground(Color.LIGHT_GRAY);
         

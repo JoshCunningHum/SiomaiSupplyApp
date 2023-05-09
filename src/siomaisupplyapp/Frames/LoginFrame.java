@@ -5,7 +5,6 @@
 package siomaisupplyapp.Frames;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import siomaisupplyapp.Connect.LOGIN;
 import siomaisupplyapp.SiomaiSupplyApp;
 

@@ -9,7 +9,7 @@ package siomaisupplyapp.Builders;
  *
  * @author Josh
  */
-public class Query implements Conditional{
+public class Query implements Conditional<Query>{
     StringBuilder cols = new StringBuilder(),
                   ordr = new StringBuilder();
     
@@ -28,62 +28,6 @@ public class Query implements Conditional{
         for(String c : cols) this.cols.append(c).append(",");
         return this;
     }
-
-    @Override
-    public Query whereGreaterEqual(String column, double value) {
-        return (Query) Conditional.super.whereGreaterEqual(column, value); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public Query whereGreaterEqual(String column, int value) {
-        return (Query) Conditional.super.whereGreaterEqual(column, value); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public Query whereGreater(String column, double value) {
-        return (Query) Conditional.super.whereGreater(column, value); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public Query whereGreater(String column, int value) {
-        return (Query) Conditional.super.whereGreater(column, value); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public Query whereLessEqual(String column, double value) {
-        return (Query) Conditional.super.whereLessEqual(column, value); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public Query whereLessEqual(String column, int value) {
-        return (Query) Conditional.super.whereLessEqual(column, value); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public Query whereLess(String column, double value) {
-        return (Query) Conditional.super.whereLess(column, value); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public Query whereLess(String column, int value) {
-        return (Query) Conditional.super.whereLess(column, value); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public Query whereNot(String column, Object value) {
-        return (Query) Conditional.super.whereNot(column, value); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public Query whereEqual(String column, Object value) {
-        return (Query) Conditional.super.whereEqual(column, value); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
-    public Query where(String clause) {
-        return (Query) Conditional.super.where(clause); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-    
     
     public Query sort(String column){
         return sort(column, true);

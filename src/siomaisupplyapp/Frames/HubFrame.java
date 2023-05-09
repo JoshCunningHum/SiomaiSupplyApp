@@ -4,7 +4,6 @@
  */
 package siomaisupplyapp.Frames;
 
-import javax.swing.JButton;
 import siomaisupplyapp.Entities.Kitten;
 import siomaisupplyapp.Entities.KittenList;
 

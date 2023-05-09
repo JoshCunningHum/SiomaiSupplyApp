@@ -8,7 +8,6 @@ import java.sql.Date;
 import javax.swing.DefaultListModel;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import siomaisupplyapp.Entities.Kitten;
 import siomaisupplyapp.Entities.KittenList;
 import siomaisupplyapp.SiomaiSupplyApp;
@@ -40,7 +39,6 @@ public class AdminFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
         pnlHeader = new javax.swing.JPanel();
         btnLogOut = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -424,7 +422,6 @@ public class AdminFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private final javax.swing.JList<String> listKitten = new javax.swing.JList<String>();
     private javax.swing.JLabel output;
     private javax.swing.JTabbedPane pnlBody;
