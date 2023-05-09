@@ -9,7 +9,7 @@ package siomaisupplyapp.Builders;
  *
  * @author Josh
  */
-public class Query implements Conditional<Query>{
+public class Query extends SQLBuilder implements Conditional<Query>{
     StringBuilder cols = new StringBuilder(),
                   ordr = new StringBuilder();
     
@@ -20,6 +20,7 @@ public class Query implements Conditional<Query>{
     int limit = 0, offset = -1; 
                   
     public Query(String table){
+        super("SELECT");
         this.table = table;
     }
     

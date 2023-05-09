@@ -11,11 +11,12 @@ import java.util.Map;
  *
  * @author Josh
  */
-public class InsertMap {
+public class InsertMap extends SQLBuilder{
     HashMap<String, Object> values = new HashMap<>();
     String table;
     
     public InsertMap(String table){
+        super("INSERT INTO");
         this.table = table;
     }
    
@@ -35,9 +36,7 @@ public class InsertMap {
             
             Object v = e.getValue();
             
-            if(v instanceof String) vals.append("'");
-            vals.append(e.getValue() == null ? " " : e.getValue().toString());
-            if(v instanceof String) vals.append("'");
+            vals.append(v == null ? " " : parseObject(v));
             
             if(count < values.size() - 1){
                 cols.append(",");
