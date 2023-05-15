@@ -46,6 +46,9 @@ public class AdminFrame extends javax.swing.JFrame {
         pnlBody = new javax.swing.JTabbedPane();
         pnlKittenManage = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel5 = new javax.swing.JPanel();
+        inpKittenSearch = new javax.swing.JTextField();
+        btnClear = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -110,7 +113,7 @@ public class AdminFrame extends javax.swing.JFrame {
         getContentPane().add(pnlHeader, java.awt.BorderLayout.PAGE_START);
 
         pnlKittenManage.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        pnlKittenManage.setLayout(new java.awt.BorderLayout());
+        pnlKittenManage.setLayout(new java.awt.BorderLayout(0, 5));
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(150, 130));
 
@@ -123,6 +126,43 @@ public class AdminFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(listKitten);
 
         pnlKittenManage.add(jScrollPane1, java.awt.BorderLayout.LINE_START);
+
+        inpKittenSearch.setToolTipText("");
+        inpKittenSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inpKittenSearchActionPerformed(evt);
+            }
+        });
+        inpKittenSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inpKittenSearchKeyTyped(evt);
+            }
+        });
+
+        btnClear.setText("Clear");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(inpKittenSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnClear)
+                .addGap(0, 509, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(inpKittenSearch)
+            .addComponent(btnClear, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+        );
+
+        pnlKittenManage.add(jPanel5, java.awt.BorderLayout.PAGE_START);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.Y_AXIS));
@@ -213,7 +253,7 @@ public class AdminFrame extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addGap(70, 111, Short.MAX_VALUE))
+                        .addGap(70, 117, Short.MAX_VALUE))
                     .addComponent(jScrollPane2)))
         );
 
@@ -234,6 +274,11 @@ public class AdminFrame extends javax.swing.JFrame {
         });
 
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         output.setForeground(new java.awt.Color(255, 51, 51));
         output.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -258,7 +303,7 @@ public class AdminFrame extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 113, Short.MAX_VALUE)
+                .addGap(0, 72, Short.MAX_VALUE)
                 .addComponent(output)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -391,12 +436,60 @@ public class AdminFrame extends javax.swing.JFrame {
         setKittenList(active_kittens);
     }//GEN-LAST:event_btnUpdateActionPerformed
 
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        String inpId = getInput("id");
+        
+        if(inpId == null){
+            output.setText("Please select a kitten to remove");
+            return;
+        }
+        
+        int id = Integer.parseInt(inpId);
+        SiomaiSupplyApp.c.removeKitten(id);
+        
+        // refresh list
+        active_kittens.remove(id);
+        setKittenList(active_kittens);
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        // TODO add your handling code here:
+        inpKittenSearch.setText("");
+        setShowingList(active_kittens);
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void inpKittenSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpKittenSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inpKittenSearchActionPerformed
+
+    private void inpKittenSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKittenSearchKeyTyped
+        // TODO add your handling code here:
+        String input = inpKittenSearch.getText();
+        
+        if(input.isEmpty()){
+            setKittenList(active_kittens);
+        }
+        
+        // Filter the active kitten search
+        KittenList res = active_kittens.filter(input, "name");
+        res.add(active_kittens.filter(input, "breed"));
+        
+        setShowingList(res);
+    }//GEN-LAST:event_inpKittenSearchKeyTyped
+
     public void setKittenList(KittenList list){
-        listKittenModel.clear();
         active_kittens = list;
+        setShowingList(active_kittens);
+        inpKittenSearch.setText("");
+    }
+    
+    public void setShowingList(KittenList list){
+        listKittenModel.clear();
         for(Kitten k : list.kittens){
             listKittenModel.addElement(k.getId() + " [" + k.getName() + "]");
         }
+        
     }
     
     private void listKittenClick(ListSelectionEvent e){
@@ -454,6 +547,7 @@ public class AdminFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnClear;
     private javax.swing.JButton btnCreate;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnLogOut;
@@ -463,6 +557,7 @@ public class AdminFrame extends javax.swing.JFrame {
     private javax.swing.JTextField inpBreed;
     private javax.swing.JTextArea inpDesc;
     private javax.swing.JTextField inpID;
+    private javax.swing.JTextField inpKittenSearch;
     private javax.swing.JTextField inpName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -475,6 +570,7 @@ public class AdminFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
