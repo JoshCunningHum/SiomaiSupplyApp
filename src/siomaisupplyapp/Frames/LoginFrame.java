@@ -4,8 +4,13 @@
  */
 package siomaisupplyapp.Frames;
 
+import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 import siomaisupplyapp.Connect.LOGIN;
+import static siomaisupplyapp.Connect.LOGIN.NOT_FOUND;
+import static siomaisupplyapp.Connect.LOGIN.SUCCESSFUL_ADOPTER;
+import static siomaisupplyapp.Connect.LOGIN.SUCCESSFUL_STAFF;
+import static siomaisupplyapp.Connect.LOGIN.WRONG_PASSWORD;
 import siomaisupplyapp.SiomaiSupplyApp;
 
 /**
@@ -58,6 +63,12 @@ public class LoginFrame extends javax.swing.JFrame {
             }
         });
 
+        inpUser.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inpUserKeyPressed(evt);
+            }
+        });
+
         jlabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jlabel2.setText("User");
 
@@ -79,6 +90,12 @@ public class LoginFrame extends javax.swing.JFrame {
                     .addComponent(inpUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jlabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
+
+        inpPass.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inpPassKeyPressed(evt);
+            }
+        });
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Password");
@@ -196,8 +213,7 @@ public class LoginFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // TODO add your handling code here:
+    private void login(){// TODO add your handling code here:
         if(check()){
             output.setText("Please fill all the required fields");
             return;
@@ -236,6 +252,10 @@ public class LoginFrame extends javax.swing.JFrame {
             }
             default -> output.setText("");
         }
+    }
+    
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        login();
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private boolean check(){
@@ -251,6 +271,18 @@ public class LoginFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnRegisterActionPerformed
 
+    private void inpUserKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpUserKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER) login();
+    }//GEN-LAST:event_inpUserKeyPressed
+
+    private void inpPassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpPassKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER) login();
+    }//GEN-LAST:event_inpPassKeyPressed
+
+    
+    
     /**
      * @param args the command line arguments
      */
