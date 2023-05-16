@@ -29,7 +29,16 @@ public class KittenList {
         this.kittens.addAll(Arrays.asList(kittens));
     }
     
+    
+    public void add(KittenList list){
+        for(Kitten k : list.kittens){
+            if(kittens.contains(k)) continue;
+            kittens.add(k);
+        }
+    }
+    
     public void add(Kitten k){
+        if(kittens.contains(k)) return;
         kittens.add(k);
     }
     
@@ -37,10 +46,29 @@ public class KittenList {
         kittens.clear();
     }
     
+    public void remove(Kitten k){
+        kittens.remove(k);
+    }
+    
+    public void remove(int index){
+        kittens.remove(index);
+    }
+    
     public void displayAll(){
         System.out.println("---- Printing Kittens --------");
         for(Kitten k : kittens){
             System.out.println(k.toString());
         }
+    }
+    
+    public KittenList filter(String value, String category){
+        value = value.toLowerCase();
+        KittenList res = new KittenList();
+        for(Kitten k : kittens){
+            String toCompareTo = category.equals("name") ? k.getName() : k.getBreed();
+            toCompareTo = toCompareTo.toLowerCase();
+            if(toCompareTo.contains(value)) res.add(k);
+        }
+        return res;
     }
 }

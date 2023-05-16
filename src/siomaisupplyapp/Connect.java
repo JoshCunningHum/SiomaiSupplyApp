@@ -14,6 +14,7 @@ import siomaisupplyapp.Entities.Adopter;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import siomaisupplyapp.Builders.DeleteMap;
 import siomaisupplyapp.Builders.UpdateMap;
 
 
@@ -117,6 +118,10 @@ public class Connect {
         return update(um.toString());
     }
     
+    private boolean update(DeleteMap dm){
+        return update(dm.toString());
+    }
+    
     // SIOMAI SUPPLY APP METHODS
     
     // Query Kittens
@@ -156,6 +161,9 @@ public class Connect {
         );
     }
     // Remove Kitten
+    public boolean removeKitten(int kitten_id){
+        return update(new DeleteMap("kitten").whereEqual("kitten_id", kitten_id));
+    }
     // Update Kitten
     public boolean updateKitten(UpdateMap u){
         // looks very useless tbh
