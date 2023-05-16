@@ -38,8 +38,12 @@ public class RegisterFrame extends javax.swing.JFrame {
         inpUser = new javax.swing.JTextField();
         jlabel2 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
-        inpPass = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        inpPass = new javax.swing.JPasswordField();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        inpConPass = new javax.swing.JPasswordField();
+        chkShowPass = new javax.swing.JCheckBox();
         jPanel10 = new javax.swing.JPanel();
         inpEmail = new javax.swing.JTextField();
         jlabel3 = new javax.swing.JLabel();
@@ -58,13 +62,13 @@ public class RegisterFrame extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(425, 425));
-        setSize(new java.awt.Dimension(425, 425));
+        setPreferredSize(new java.awt.Dimension(425, 500));
+        setSize(new java.awt.Dimension(425, 500));
 
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.Y_AXIS));
 
         jlabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jlabel2.setText("Username");
+        jlabel2.setText("Username *");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -88,16 +92,16 @@ public class RegisterFrame extends javax.swing.JFrame {
         jPanel2.add(jPanel1);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("Password");
+        jLabel1.setText("Password *");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(70, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(inpPass, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -105,11 +109,52 @@ public class RegisterFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(inpPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inpPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         jPanel2.add(jPanel5);
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel2.setText("Confirm Password *");
+
+        inpConPass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inpConPassActionPerformed(evt);
+            }
+        });
+
+        chkShowPass.setText("Show Password");
+        chkShowPass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkShowPassActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(28, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(chkShowPass, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                    .addComponent(inpConPass)))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(inpConPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chkShowPass)
+                .addContainerGap(8, Short.MAX_VALUE))
+        );
+
+        jPanel2.add(jPanel6);
 
         inpEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -149,7 +194,7 @@ public class RegisterFrame extends javax.swing.JFrame {
         });
 
         jlabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jlabel4.setText("Address");
+        jlabel4.setText("Address *");
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -180,7 +225,7 @@ public class RegisterFrame extends javax.swing.JFrame {
         });
 
         jlabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jlabel5.setText("Contact");
+        jlabel5.setText("Contact *");
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
@@ -272,7 +317,7 @@ public class RegisterFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(pnlMainLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(51, 51, 51)
                 .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -284,7 +329,7 @@ public class RegisterFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -292,7 +337,7 @@ public class RegisterFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(95, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(pnlMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(66, 66, 66))
         );
@@ -338,6 +383,12 @@ public class RegisterFrame extends javax.swing.JFrame {
             return;
         }
         
+        // Check if password and confirmpassword is the same
+        if(!inpPass.getPassword().equals(inpConPass.getPassword())){
+            output.setText("Password does not match");
+            return;
+        }
+        
         boolean c = chkEmployee.isSelected();
         User u ;
         
@@ -360,6 +411,21 @@ public class RegisterFrame extends javax.swing.JFrame {
     private void inpContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpContactActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_inpContactActionPerformed
+
+    private void inpConPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpConPassActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inpConPassActionPerformed
+
+    private void chkShowPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkShowPassActionPerformed
+        // TODO add your handling code here:
+        if(chkShowPass.isSelected()){
+            inpPass.setEchoChar('\u0000');
+            inpConPass.setEchoChar('\uu0000');
+        }else{
+            inpConPass.setEchoChar('\u2022');
+            inpPass.setEchoChar('\u2022');
+        }
+    }//GEN-LAST:event_chkShowPassActionPerformed
 
     /**
      * @param args the command line arguments
@@ -431,12 +497,15 @@ public class RegisterFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnRegister;
     private javax.swing.JCheckBox chkEmployee;
+    private javax.swing.JCheckBox chkShowPass;
     private javax.swing.JTextField inpAddress;
+    private javax.swing.JPasswordField inpConPass;
     private javax.swing.JTextField inpContact;
     private javax.swing.JTextField inpEmail;
-    private javax.swing.JTextField inpPass;
+    private javax.swing.JPasswordField inpPass;
     private javax.swing.JTextField inpUser;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
@@ -446,6 +515,7 @@ public class RegisterFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JLabel jlabel2;
     private javax.swing.JLabel jlabel3;
     private javax.swing.JLabel jlabel4;
