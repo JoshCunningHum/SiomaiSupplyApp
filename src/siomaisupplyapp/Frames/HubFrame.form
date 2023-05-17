@@ -180,8 +180,10 @@
                       <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="cmbSort" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="568" max="32767" attributes="0"/>
+                      <EmptySpace pref="544" max="32767" attributes="0"/>
                       <Component id="btnPrev" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lblPageNum" min="-2" pref="18" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnNext" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -197,6 +199,7 @@
                           <Component id="cmbSort" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnNext" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnPrev" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPageNum" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -227,6 +230,9 @@
                 <Property name="text" type="java.lang.String" value="&gt;"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNextActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnPrev">
               <Properties>
@@ -236,6 +242,12 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrevActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblPageNum">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="1"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
@@ -252,8 +264,10 @@
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-            <Property name="columns" type="int" value="0"/>
-            <Property name="rows" type="int" value="1"/>
+            <Property name="columns" type="int" value="5"/>
+            <Property name="horizontalGap" type="int" value="10"/>
+            <Property name="rows" type="int" value="3"/>
+            <Property name="verticalGap" type="int" value="10"/>
           </Layout>
         </Container>
       </SubComponents>
