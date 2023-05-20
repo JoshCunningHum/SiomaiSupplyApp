@@ -153,7 +153,14 @@ public class Adoption {
         sb.append(mins).append(" min").append((mins > 1 ? "s " : " "));
         
         lblTimeLeft.setText((status == STATUS.ONGOING.ordinal()) ? sb.toString() : (status == STATUS.SUCCESSFUL.ordinal()) ? "Recieved" :  "Failed Adoption");
-        prgTimeLeft.setValue((int) ((days > 7) ? 100 : 100 - ((tl.getSeconds() / (7 * 86400)) * 100)));
+        prgTimeLeft.setMinimum(0);
+        prgTimeLeft.setMaximum(100);
+        
+        double ratio = (((double) tl.getSeconds()) / 604800f) * 100f;
+        
+        int timeLeftInt = (int) (100f - ratio);
+        
+        prgTimeLeft.setValue((int) ((days > 7 || status != STATUS.ONGOING.ordinal()) ? 100 : timeLeftInt));
         prgTimeLeft.setForeground(progColor);
         
         btnReAdopt.setVisible(status == STATUS.CANCELED.ordinal());
