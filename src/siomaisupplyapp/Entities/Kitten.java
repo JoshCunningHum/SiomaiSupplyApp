@@ -5,13 +5,17 @@
 package siomaisupplyapp.Entities;
 
 import java.awt.Color;
+import java.awt.event.ActionListener;
 import java.sql.Date;
-import javax.swing.BoxLayout;
+import java.text.SimpleDateFormat;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import siomaisupplyapp.Builders.Updatable;
 import siomaisupplyapp.Builders.UpdateMap;
+import siomaisupplyapp.Frames.HubFrame;
+import siomaisupplyapp.Frames.KittenProfile;
 /**
  *
  * @author Josh
@@ -147,18 +151,46 @@ public class Kitten implements Updatable{
                other.getBirthdate().equals(birthdate));
     }
     
+    public String multiLineDesc(){
+        StringBuilder sb = new StringBuilder("<html>");
+        
+        String[] linebreaks = description.split("\n");
+        
+        for (String line : linebreaks) {
+            if(!sb.isEmpty()) sb.append("<br>");
+            sb.append(line);
+        }
+        
+        return sb.toString();
+    }
     
+    public String seperatingBreeds(){
+        StringBuilder sb = new StringBuilder("<html>");
+        
+        String[] breeds = breed.split(",");
+        for (String b : breeds) {
+            sb.append("<u>").append(b).append("</u>\t");
+        }
+        
+        return sb.toString();
+    }
     
-    public JPanel getPanelComponent(){
+    public String formattedDate(){
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM dd, yyyy");
+        return dateFormatter.format(birthdate);
+    }
+    
+    public JPanel getPanelComponent(HubFrame last){
         JPanel p = new JPanel();
         p.setBackground(Color.LIGHT_GRAY);
         
         JButton view = new JButton("View More");
         view.setVerticalAlignment(JButton.BOTTOM);
         
-        JLabel jlName = new JLabel(name),
-               jlBreed = new JLabel(breed),
-               jlDate = new JLabel(birthdate.toString());
+        
+        JLabel jlName = new JLabel(String.format("[%d] %s", id, name)),
+               jlBreed = new JLabel(seperatingBreeds()),
+               jlDate = new JLabel(formattedDate());
         
         
         javax.swing.GroupLayout pLayout = new javax.swing.GroupLayout(p);
@@ -193,7 +225,19 @@ public class Kitten implements Updatable{
                 .addContainerGap())
         );
         
+        view.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showKittenProfile(last.username, last);
+            }
+        });
         
         return p;
+    }
+    
+    private void showKittenProfile(String username, JFrame last){
+        KittenProfile f = new KittenProfile(username, this);
+        f.setVisible(true);
+        f.setLocationRelativeTo(last);
+        last.dispose();
     }
 }

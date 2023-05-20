@@ -4,6 +4,7 @@
  */
 package siomaisupplyapp;
 
+import javax.swing.JFrame;
 import siomaisupplyapp.Frames.LoginFrame;
 
 /**
@@ -18,6 +19,13 @@ public class SiomaiSupplyApp {
     
     
     public static Connect c;
+    
+    public static void showLogin(JFrame from){
+        LoginFrame lf = new LoginFrame();
+        lf.setVisible(true);
+        lf.setLocationRelativeTo(from);
+        from.dispose();
+    }
 
     /**
      * @param args the command line arguments

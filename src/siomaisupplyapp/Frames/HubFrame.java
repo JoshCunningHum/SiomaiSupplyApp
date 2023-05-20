@@ -14,11 +14,11 @@ import siomaisupplyapp.SiomaiSupplyApp;
  *
  * @author Josh
  */
-public class HubFrame extends javax.swing.JFrame {
+public final class HubFrame extends javax.swing.JFrame {
     
     int kp_width, kp_height, limit = 15, max_rows = 3, max_cols = 5, page = 1;
-    String username;
-    public KittenList active_kittens, showing_kittens;
+    public String username;
+    public KittenList active_kittens, all, showing_kittens;
     GridLayout gl;
     
     /**
@@ -32,9 +32,14 @@ public class HubFrame extends javax.swing.JFrame {
         kp_height = pnlKittens.getHeight();
         gl = (GridLayout) pnlKittens.getLayout();
         
+        all = SiomaiSupplyApp.c.queryKittens(0, 0);
+        active_kittens = new KittenList();
+        active_kittens.add(all);
+        
         calcDimensions();
-        active_kittens = SiomaiSupplyApp.c.queryKittens(limit, 0);
         displayKittens(active_kittens.page(page - 1, limit));
+        
+        updateNavButtons();
     }
 
     /**
@@ -60,7 +65,10 @@ public class HubFrame extends javax.swing.JFrame {
         cmbSort = new javax.swing.JComboBox<>();
         btnNext = new javax.swing.JButton();
         btnPrev = new javax.swing.JButton();
-        lblPageNum = new javax.swing.JLabel();
+        lblPage = new javax.swing.JLabel();
+        inpSearch = new javax.swing.JTextField();
+        btnClearSearch = new javax.swing.JButton();
+        btnToggleSortOrder = new javax.swing.JToggleButton();
         pnlKittens = new javax.swing.JPanel();
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -106,8 +114,18 @@ public class HubFrame extends javax.swing.JFrame {
         });
 
         btnCarrier.setText("Carrier");
+        btnCarrier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCarrierActionPerformed(evt);
+            }
+        });
 
         btnAccount.setText("Account");
+        btnAccount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAccountActionPerformed(evt);
+            }
+        });
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -172,8 +190,31 @@ public class HubFrame extends javax.swing.JFrame {
             }
         });
 
-        lblPageNum.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblPageNum.setText("1");
+        lblPage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPage.setText("1");
+
+        inpSearch.setMinimumSize(new java.awt.Dimension(71, 22));
+        inpSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpSearchKeyReleased(evt);
+            }
+        });
+
+        btnClearSearch.setText("Clear");
+        btnClearSearch.setMinimumSize(new java.awt.Dimension(71, 22));
+        btnClearSearch.setPreferredSize(new java.awt.Dimension(71, 22));
+        btnClearSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearSearchActionPerformed(evt);
+            }
+        });
+
+        btnToggleSortOrder.setText("🔽");
+        btnToggleSortOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnToggleSortOrderActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -181,13 +222,19 @@ public class HubFrame extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(inpSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnClearSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbSort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 544, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnToggleSortOrder)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 301, Short.MAX_VALUE)
                 .addComponent(btnPrev)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblPageNum, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblPage, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnNext)
                 .addContainerGap())
@@ -196,18 +243,26 @@ public class HubFrame extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(cmbSort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNext)
-                    .addComponent(btnPrev)
-                    .addComponent(lblPageNum))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnNext)
+                            .addComponent(btnPrev)
+                            .addComponent(lblPage))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnClearSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cmbSort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3)
+                        .addComponent(inpSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnToggleSortOrder)))
+                .addContainerGap())
         );
 
         pnlBody.add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
         pnlKittens.setBackground(new java.awt.Color(153, 153, 153));
+        pnlKittens.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         pnlKittens.setLayout(new java.awt.GridLayout(3, 5, 10, 10));
         pnlBody.add(pnlKittens, java.awt.BorderLayout.CENTER);
 
@@ -227,8 +282,28 @@ public class HubFrame extends javax.swing.JFrame {
 
     private void cmbSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSortActionPerformed
         // TODO add your handling code here:
+        initiateSort();
     }//GEN-LAST:event_cmbSortActionPerformed
 
+    private void initiateSort(){
+        String selected = String.valueOf(cmbSort.getSelectedItem()),
+               sortTo = null;
+        
+        switch(selected.toLowerCase()){
+            case "age":
+                sortTo = "birthdate";
+                break;
+            default:
+                sortTo = selected.toLowerCase();
+        }
+        
+        all = SiomaiSupplyApp.c.queryKittens(0, 0, sortTo, btnToggleSortOrder.isSelected());
+        active_kittens = new KittenList();
+        active_kittens.add(all);
+        
+        updateShownList();
+    }
+    
     private void calcDimensions(){
         int[] dims = new int[3];
         
@@ -238,40 +313,47 @@ public class HubFrame extends javax.swing.JFrame {
         max_cols = kp_width / Kitten.pWidth;
         max_rows = kp_height / Kitten.pHeight;
         limit = max_cols * max_rows;
-        
-    }
-    
-    private void calcMaxCols(){                                 
-        // TODO add your handling code here:
-        kp_width = pnlKittens.getWidth();
-        kp_height = pnlKittens.getHeight();
     }
     
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
         calcDimensions();
         
         // TODO: RE-ADjust Margins
-        gl.setRows(0);
+        gl.setRows((max_rows > max_cols) ? max_rows : 0);
         gl.setColumns(max_cols);
         
-        System.out.println(max_cols + " " + max_rows + " " + limit);
+        updateShownList();
+        System.out.println(max_cols + " " + max_rows + " " + limit + " Total: " + active_kittens.size());
     }//GEN-LAST:event_formComponentResized
 
-    public void prevPage(){
-        boolean condition
-        if(page <= 1){
-            return;
+    public void updateNavButtons(){
+        boolean next = page - 1 >= active_kittens.size() / limit,
+                prev = page <= 1;
+        
+        btnPrev.setEnabled(!prev);
+        btnNext.setEnabled(!next);
+        lblPage.setText(Integer.toString(page));
+    }
+    
+    public void updateShownList(){
+        int offset = (page - 1) * limit;
+        if(offset > active_kittens.size()){
+            // calculate nearest offset
+            page = (active_kittens.size() / limit) + 1;
         }
-        page--;
+        updateNavButtons();
         
         displayKittens(active_kittens.page(page - 1, limit));
     }
     
+    public void prevPage(){
+        page--;
+        updateShownList();
+    }
+    
     public void nextPage(){
-        if(page - 1 >= active_kittens.size() / limit) return;
         page++;
-        
-        displayKittens(active_kittens.page(page - 1, limit));
+        updateShownList();
     }
     
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
@@ -279,17 +361,67 @@ public class HubFrame extends javax.swing.JFrame {
         nextPage();
     }//GEN-LAST:event_btnNextActionPerformed
 
+    private void btnAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccountActionPerformed
+        // TODO add your handling code here:
+        AccountFrame f = new AccountFrame(username);
+        f.setVisible(true);
+        f.setLocationRelativeTo(this);
+        this.dispose();
+    }//GEN-LAST:event_btnAccountActionPerformed
+
+    private void btnClearSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearSearchActionPerformed
+        // TODO add your handling code here:
+        inpSearch.setText("");
+        active_kittens.clear();
+        active_kittens.add(all);
+        page = 1;
+        updateShownList();
+    }//GEN-LAST:event_btnClearSearchActionPerformed
+
+    private void inpSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpSearchKeyReleased
+        // TODO add your handling code here:
+        
+        String input = inpSearch.getText();
+        
+        active_kittens.clear();
+            
+        if(input.isEmpty()) active_kittens.add(all);
+        
+        // Filter the active kitten search
+        active_kittens = all.filter(input, "name");
+        active_kittens.add(all.filter(input, "breed"));
+        
+        updateShownList();
+    }//GEN-LAST:event_inpSearchKeyReleased
+
+    private void btnToggleSortOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnToggleSortOrderActionPerformed
+        // TODO add your handling code here:
+        boolean isAsc = btnToggleSortOrder.isSelected();
+        btnToggleSortOrder.setText(isAsc ? "🔼" : "🔽");
+        initiateSort();
+    }//GEN-LAST:event_btnToggleSortOrderActionPerformed
+
+    private void btnCarrierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCarrierActionPerformed
+        // TODO add your handling code here:
+        CarrierFrame f = new CarrierFrame(username);
+        f.setVisible(true);
+        f.setLocationRelativeTo(this);
+        this.dispose();
+    }//GEN-LAST:event_btnCarrierActionPerformed
+
     public void displayKittens(KittenList list){
         int count = 0, cols = max_cols, width = Kitten.pWidth, height = Kitten.pHeight;
         
         pnlKittens.removeAll();
         showing_kittens = list;
         for(Kitten k : list.kittens){
-            JPanel p = k.getPanelComponent();
+            JPanel p = k.getPanelComponent(this);
             
             pnlKittens.add(p);
             count++;
         }
+        pnlKittens.revalidate();
+        pnlKittens.repaint();
     }
     
     /**
@@ -330,17 +462,20 @@ public class HubFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAccount;
     private javax.swing.JButton btnCarrier;
+    private javax.swing.JButton btnClearSearch;
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrev;
     private javax.swing.JButton btnSupport;
+    private javax.swing.JToggleButton btnToggleSortOrder;
     private javax.swing.JComboBox<String> cmbSort;
+    private javax.swing.JTextField inpSearch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollBar jScrollBar1;
-    private javax.swing.JLabel lblPageNum;
+    private javax.swing.JLabel lblPage;
     private javax.swing.JPanel pnlBody;
     private javax.swing.JPanel pnlHeader;
     private javax.swing.JPanel pnlKittens;

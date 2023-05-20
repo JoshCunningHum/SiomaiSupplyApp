@@ -4,13 +4,24 @@
  */
 package siomaisupplyapp.Entities;
 
+import java.util.regex.Pattern;
+
 /**
  *
  * @author Josh
  */
 public abstract class User {
-    String username, password, email;
+    protected String username, password, email;
 
+     public static boolean validateEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            return false;
+        }
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +"[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        return pattern.matcher(email).matches();
+    }
+    
     public User() {
     }
 

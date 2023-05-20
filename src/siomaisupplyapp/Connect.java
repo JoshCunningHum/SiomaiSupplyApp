@@ -12,10 +12,12 @@ import siomaisupplyapp.Entities.User;
 import siomaisupplyapp.Entities.Kitten;
 import siomaisupplyapp.Entities.Adopter;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import siomaisupplyapp.Builders.DeleteMap;
 import siomaisupplyapp.Builders.UpdateMap;
+import siomaisupplyapp.Entities.Adoption;
 
 
 /**
@@ -84,6 +86,7 @@ public class Connect {
     }
     
     private ResultSet query(Query qb){
+        System.out.println(qb.toString() + "| HERE");
         return query(qb.toString());
     }
     
@@ -124,8 +127,41 @@ public class Connect {
     
     // SIOMAI SUPPLY APP METHODS
     
+    
+    // Check for Expirees
+    public void checkExpirees(){
+        Date now = new Date((new java.util.Date()).getTime());
+        
+        // Loop through all ongoing adoptions
+        ResultSet ongoing = query(new Query("adoption").whereEqual("status", Adoption.STATUS.ONGOING.ordinal()));
+        
+        try {
+            while(ongoing.next()){
+                Date d = ongoing.getDate("date_expire");
+                
+                Adoption a = new Adoption(
+                        ongoing.getInt("adoption_id"),
+                        ongoing.getInt("status"),
+                        ongoing.getInt("kitten_id"),
+                        ongoing.getString("username"),
+                        d
+                );
+                
+                if(now.after(d)){
+                    // The adoption is already expireed, cancel it
+                    cancelAdoption(a);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     // Query Kittens
     public KittenList queryKittens(Query q){
+        // Before querying, update all expired adoptions first
+        checkExpirees();
+        
         KittenList list = new KittenList();
         ResultSet rs = query(q);
         
@@ -170,17 +206,198 @@ public class Connect {
         return update(u);
     }
     // Query With Filter and Sort
-    
-    // Query All Kittens that fits in the page
+    public KittenList queryKittens(int limit, int offset, String sort, boolean ascending){
+        return queryKittens(new Query("kitten")
+                .limit(limit).offset(offset)
+                .sort(sort, ascending)
+                .whereEqual("status", Kitten.STATUS.AVAILABLE.ordinal()));
+    }
+    // Query Kittens with limit and offset
     public KittenList queryKittens(int limit, int offset){
         // order by age by default
-        return queryKittens(new Query("kitten").limit(limit).offset(offset).sort("birthdate"));
+        return queryKittens(limit, offset, "birthdate", false);
+    }
+    // Query All Kittens (For admin)
+    public KittenList queryKittensAll(){
+        return queryKittens(new Query("kitten"));
+    }
+    // Query a kitten
+    public Kitten queryKitten(int id){
+        ResultSet rs = query(new Query("kitten").whereEqual("kitten_id", id));
+        Kitten k = null;
+        
+        try {
+            if(rs.next()){
+                k = new Kitten(
+                        id, 
+                        rs.getInt("status"),
+                        rs.getString("name"), 
+                        rs.getString("breed"), 
+                        rs.getString("description"), 
+                        rs.getDate("birthdate")
+                );
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return k;
     }
     
     
-    // Query Adoptions
+    
+    // Query All Adoptions
+    public ArrayList<Adoption> queryAdoptions(){
+        ArrayList<Adoption> res = new ArrayList<>();
+        
+        ResultSet rs = query(new Query("adoption"));
+        
+        try {
+            while(rs.next()){
+                res.add(new Adoption(
+                        rs.getInt("adoption_id"),
+                        rs.getInt("status"),
+                        rs.getInt("kitten_id"),
+                        rs.getString("username"),
+                        rs.getDate("date_expire")
+                ));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return res;
+    }
+    // Query Adoption from a user
+    public ArrayList<Adoption> getAdoptions(String username){
+        ArrayList<Adoption> res = new ArrayList<>();
+        
+        ResultSet rs = query(new Query("adoption").whereEqual("username", username));
+        
+        try {
+            while(rs.next()){
+                res.add(new Adoption(
+                        rs.getInt("adoption_id"),
+                        rs.getInt("status"),
+                        rs.getInt("kitten_id"),
+                        username,
+                        rs.getDate("date_expire")
+                ));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return res;
+    }
     // Create Adoption
-    // Remove Adoption
+    public boolean createAdoption(String username, int kitten_id, Date expire){
+        // Make sure first that kitten have available status
+        ResultSet rs = query(new Query("kitten")
+                .whereEqual("kitten_id", kitten_id).and()
+                .whereEqual("status", Kitten.STATUS.AVAILABLE.ordinal()));
+           
+        try {
+            // If kitten mentioned is not available
+            if(!rs.next()) return false;
+               
+            // Set kitten status to processing
+            update(new UpdateMap("kitten").set("status", Kitten.STATUS.PROCESSING.ordinal()).whereEqual("kitten_id", kitten_id));
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        // Then create adoption
+        return insert(new InsertMap("adoption")
+                .$("username", username)
+                .$("kitten_id", kitten_id)
+                .$("date_expire", expire.toString())
+        );
+    }
+    // Update Adoption
+    public boolean updateAdoption(Adoption before, Adoption after){
+        // Reset first the status of the before kitten to available
+        update(new UpdateMap("kitten")
+                .set("status", Kitten.STATUS.AVAILABLE.ordinal())
+                .whereEqual("kitten_id", before.getKitten_id())
+        );
+        
+        // Then change the status of the after kitten to processing
+        update(new UpdateMap("kitten")
+                .set("status", Kitten.STATUS.PROCESSING.ordinal())
+                .whereEqual("kitten_id", after.getKitten_id())
+        );
+        
+        // Then finally, change the satatus, kitten id and username of the said transaction (uses the id of the before object)
+        return update(new UpdateMap("adoption")
+                .set("kitten_id", after.getKitten_id())
+                .set("username", after.getUsername())
+                .whereEqual("adoption_id", before.getId())
+        );
+    }
+    // Verify Adoption
+    public boolean verifyAdoption(Adoption a){
+        // Set kitten status to unavailable
+        update(new UpdateMap("kitten")
+                .set("status", Kitten.STATUS.UNAVAILABLE.ordinal())
+                .whereEqual("kitten_id", a.getKitten_id())
+        );
+        
+        // can only verify ongoing adoptions
+        if(a.getStatus() != Adoption.STATUS.ONGOING.ordinal()) return false;
+        
+        // Then update adoption status to successful
+        return update(new UpdateMap("adoption")
+                .set("status", Adoption.STATUS.SUCCESSFUL.ordinal())
+                .whereEqual("adoption_id", a.getId())
+        );
+    }
+    
+    // Cancel Adoption
+    public boolean cancelAdoption(Adoption a){
+        // Set kitten status to available
+        update(new UpdateMap("kitten")
+                .set("status", Kitten.STATUS.AVAILABLE.ordinal())
+                .whereEqual("kitten_id", a.getKitten_id())
+        );
+        
+        // can only cancel ongoing adoptions
+        if(a.getStatus() != Adoption.STATUS.ONGOING.ordinal()) return false;
+        
+        // Then update adoption status to cancelled
+        return update(new UpdateMap("adoption")
+                .set("status", Adoption.STATUS.CANCELED.ordinal())
+                .whereEqual("adoption_id", a.getId())
+        );
+    }
+    // Return Adoption
+    public boolean returnAdoption(Adoption a){
+        // Set kitten status back to available
+        update(new UpdateMap("kitten")
+                .set("status", Kitten.STATUS.AVAILABLE.ordinal())
+                .whereEqual("kitten_id", a.getKitten_id())
+        );
+        
+        // can only return successful adoptions
+        if(a.getStatus() != Adoption.STATUS.SUCCESSFUL.ordinal()) return false;
+        
+        return update(new UpdateMap("adoption")
+                .set("status", Adoption.STATUS.RETURNED.ordinal())
+                .whereEqual("adoption_id", a.getId())
+        );
+    }
+    // Extend Adoption
+    public boolean extendAdoption(Adoption a, int numOfDays){
+        long extension = numOfDays * 86400000;
+        
+        Date d = a.getDate_expire();
+        d.setTime(d.getTime() + extension);
+        
+        return update(new UpdateMap("adoption")
+                .set("date_expire", d.toString())
+                .whereEqual("adoption_id", a.getId())
+        );
+    }
     
     // Register User
     public boolean registerUser(User user){
@@ -235,5 +452,42 @@ public class Connect {
         }
         
         return LOGIN.UNKNOWN_ERROR;
+    }
+    // Get Adopter Details
+    public Adopter getAdopterDetails(String username){
+        ResultSet rs = query(new Query("user").whereEqual("username", username));
+        Adopter u = null;
+        
+        try {
+            if(rs.next()){
+                u = new Adopter(rs.getString("username"), rs.getString("password"), rs.getString("email"));
+                u.setAddress(rs.getString("address"));
+                u.setContact(rs.getString("contact"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return u;
+    }
+    // Get All Adopter Names
+    public ArrayList<String> getAllAdopter(){
+        ArrayList<String> res = new ArrayList<>();
+        ResultSet rs = query(new Query("user").whereEqual("type", 0));
+        
+        try {
+            while(rs.next()){
+                res.add(rs.getString("username"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Connect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return res;
+    }
+    // Update Adopter
+    public boolean updateAdopter(UpdateMap um){
+        System.out.println(um.toString());
+        return update(um);
     }
 }

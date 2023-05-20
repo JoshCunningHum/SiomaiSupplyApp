@@ -5,9 +5,14 @@
 package siomaisupplyapp.Frames;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
+import siomaisupplyapp.Entities.Adoption;
 import siomaisupplyapp.Entities.Kitten;
 import siomaisupplyapp.Entities.KittenList;
 import siomaisupplyapp.SiomaiSupplyApp;
@@ -19,17 +24,55 @@ import siomaisupplyapp.SiomaiSupplyApp;
 public class AdminFrame extends javax.swing.JFrame {
 
    String username;
-   DefaultListModel<String> listKittenModel;
+   DefaultListModel<String> listKittenModel, modAdopt, modUser, modKitty;
    KittenList active_kittens;
+   
+   KittenList avKitty, all;
+   ArrayList<Adoption> adoptions;
+   ArrayList<String> users;
+   Kitten kittenOnAdoption;
+   String adopterOnAdoption;
+   Adoption selectedAdoption;
+   
+   boolean hasInitiated = false;
     
     /**
      * Creates new form AdminFrame
      */
      public AdminFrame(String user) {
         initComponents();
+        hasInitiated = true;
         this.username = user;
+        
+        users = SiomaiSupplyApp.c.getAllAdopter();
+        retrieveData();
     }
 
+    public void retrieveData(){
+        adoptions = SiomaiSupplyApp.c.queryAdoptions();
+        all = SiomaiSupplyApp.c.queryKittensAll();
+        
+        // And Enable what needs to be enabled
+        btnAdoptDelete.setEnabled(false);
+        inpUserSearch.setEnabled(false);
+        inpKittySearch.setEnabled(false);
+        btnClrKitty.setEnabled(false);
+        btnClrUser.setEnabled(false);
+        btnExtendDays.setEnabled(false);
+        btnAdoptEdit.setEnabled(false);
+        
+        // Delete all inputs
+        if(modKitty != null) modKitty.clear();
+        
+        showUserList(users);
+        showAdoptList(adoptions);
+    }
+    
+    public void refreshKittenTab(){
+        inpKittenSearch.setText("");
+        setKittenList(SiomaiSupplyApp.c.queryKittensAll());
+    }
+     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,7 +82,6 @@ public class AdminFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
         pnlHeader = new javax.swing.JPanel();
         btnLogOut = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -70,8 +112,39 @@ public class AdminFrame extends javax.swing.JFrame {
         btnDelete = new javax.swing.JButton();
         output = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        inpAdoptSearch = new javax.swing.JTextField();
+        btnClrAdopt = new javax.swing.JButton();
+        inpUserSearch = new javax.swing.JTextField();
+        btnClrUser = new javax.swing.JButton();
+        inpKittySearch = new javax.swing.JTextField();
+        btnClrKitty = new javax.swing.JButton();
+        jPanel8 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jPanel9 = new javax.swing.JPanel();
+        jPanel10 = new javax.swing.JPanel();
+        btnAdoptEdit = new javax.swing.JButton();
+        btnAdoptDelete = new javax.swing.JButton();
+        inpAdoptID = new javax.swing.JTextField();
+        inpKittyID = new javax.swing.JTextField();
+        inpUsername = new javax.swing.JTextField();
+        inpAdoptExpiree = new javax.swing.JTextField();
+        cmbAdoptStatus = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        inpExtendDays = new javax.swing.JTextField();
+        btnExtendDays = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        jPanel14 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jPanel11 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(750, 50));
 
         pnlHeader.setBackground(new java.awt.Color(0, 51, 51));
         pnlHeader.setPreferredSize(new java.awt.Dimension(750, 50));
@@ -112,6 +185,12 @@ public class AdminFrame extends javax.swing.JFrame {
 
         getContentPane().add(pnlHeader, java.awt.BorderLayout.PAGE_START);
 
+        pnlBody.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                pnlBodyStateChanged(evt);
+            }
+        });
+
         pnlKittenManage.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         pnlKittenManage.setLayout(new java.awt.BorderLayout(0, 5));
 
@@ -128,14 +207,9 @@ public class AdminFrame extends javax.swing.JFrame {
         pnlKittenManage.add(jScrollPane1, java.awt.BorderLayout.LINE_START);
 
         inpKittenSearch.setToolTipText("");
-        inpKittenSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inpKittenSearchActionPerformed(evt);
-            }
-        });
         inpKittenSearch.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                inpKittenSearchKeyTyped(evt);
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpKittenSearchKeyReleased(evt);
             }
         });
 
@@ -154,7 +228,7 @@ public class AdminFrame extends javax.swing.JFrame {
                 .addComponent(inpKittenSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnClear)
-                .addGap(0, 509, Short.MAX_VALUE))
+                .addGap(0, 512, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,7 +327,7 @@ public class AdminFrame extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addGap(70, 117, Short.MAX_VALUE))
+                        .addGap(70, 112, Short.MAX_VALUE))
                     .addComponent(jScrollPane2)))
         );
 
@@ -303,7 +377,7 @@ public class AdminFrame extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 72, Short.MAX_VALUE)
+                .addGap(0, 62, Short.MAX_VALUE)
                 .addComponent(output)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -318,16 +392,268 @@ public class AdminFrame extends javax.swing.JFrame {
 
         pnlBody.addTab("Kittens", pnlKittenManage);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 750, Short.MAX_VALUE)
+        jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        jPanel2.setLayout(new java.awt.BorderLayout(5, 5));
+
+        btnClrAdopt.setText("❌");
+        btnClrAdopt.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
+        btnClrAdopt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClrAdoptActionPerformed(evt);
+            }
+        });
+
+        inpUserSearch.setEnabled(false);
+        inpUserSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpUserSearchKeyReleased(evt);
+            }
+        });
+
+        btnClrUser.setText("❌");
+        btnClrUser.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
+        btnClrUser.setEnabled(false);
+        btnClrUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClrUserActionPerformed(evt);
+            }
+        });
+
+        inpKittySearch.setEnabled(false);
+        inpKittySearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inpKittySearchKeyReleased(evt);
+            }
+        });
+
+        btnClrKitty.setText("❌");
+        btnClrKitty.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
+        btnClrKitty.setEnabled(false);
+        btnClrKitty.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClrKittyActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addComponent(inpAdoptSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnClrAdopt, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 322, Short.MAX_VALUE)
+                .addComponent(inpUserSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnClrUser, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(inpKittySearch, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnClrKitty, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 434, Short.MAX_VALUE)
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(inpAdoptSearch)
+            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addComponent(btnClrKitty, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnClrAdopt, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnClrUser, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addComponent(inpUserSearch)
+            .addComponent(inpKittySearch)
         );
+
+        jPanel2.add(jPanel7, java.awt.BorderLayout.PAGE_START);
+
+        jPanel8.setLayout(new java.awt.BorderLayout(10, 0));
+
+        modKitty = new DefaultListModel<>();
+        lstKitty.setModel(modKitty);
+        lstKitty.getSelectionModel().addListSelectionListener(e -> {
+            listKittyClick(e);
+        });
+        lstKitty.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane4.setViewportView(lstKitty);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
+        );
+
+        jPanel8.add(jPanel6, java.awt.BorderLayout.LINE_END);
+
+        jPanel9.setPreferredSize(new java.awt.Dimension(379, 379));
+        jPanel9.setLayout(new java.awt.BorderLayout());
+
+        btnAdoptEdit.setText("Edit");
+        btnAdoptEdit.setEnabled(false);
+        btnAdoptEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdoptEditActionPerformed(evt);
+            }
+        });
+
+        btnAdoptDelete.setText("Delete");
+        btnAdoptDelete.setEnabled(false);
+        btnAdoptDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdoptDeleteActionPerformed(evt);
+            }
+        });
+
+        inpAdoptID.setEditable(false);
+
+        inpKittyID.setEditable(false);
+
+        inpUsername.setEditable(false);
+
+        inpAdoptExpiree.setEditable(false);
+
+        cmbAdoptStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ongoing", "Successful", "Cancelled", "Returned" }));
+        cmbAdoptStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbAdoptStatusActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel8.setText("ID");
+
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel9.setText("kitten ID");
+
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel10.setText("Adoptee");
+
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel11.setText("Date Expiree");
+
+        btnExtendDays.setText("Extend");
+        btnExtendDays.setEnabled(false);
+        btnExtendDays.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExtendDaysActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel12.setText("Number of Days");
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnExtendDays, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(inpExtendDays)
+                    .addComponent(inpKittyID, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(inpAdoptID, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                        .addComponent(btnAdoptDelete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAdoptEdit))
+                    .addComponent(inpUsername, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(inpAdoptExpiree, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cmbAdoptStatus, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(12, 12, 12))
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(inpAdoptID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(inpKittyID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(inpUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(inpAdoptExpiree, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbAdoptStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(inpExtendDays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnExtendDays)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdoptDelete)
+                    .addComponent(btnAdoptEdit))
+                .addContainerGap())
+        );
+
+        jPanel9.add(jPanel10, java.awt.BorderLayout.CENTER);
+
+        modUser = new DefaultListModel<>();
+        lstUser.setModel(modUser);
+        lstUser.getSelectionModel().addListSelectionListener(e -> {
+            listUserClick(e);
+        });
+        lstUser.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane5.setViewportView(lstUser);
+
+        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+        jPanel14.setLayout(jPanel14Layout);
+        jPanel14Layout.setHorizontalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+        );
+        jPanel14Layout.setVerticalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
+        );
+
+        jPanel9.add(jPanel14, java.awt.BorderLayout.LINE_END);
+
+        jPanel8.add(jPanel9, java.awt.BorderLayout.CENTER);
+
+        jPanel2.add(jPanel8, java.awt.BorderLayout.CENTER);
+
+        modAdopt = new DefaultListModel<>();
+        lstAdopt.setModel(modAdopt);
+        lstAdopt.getSelectionModel().addListSelectionListener(e -> {
+            listAdoptClick(e);
+        });
+        lstAdopt.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane3.setViewportView(lstAdopt);
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
+        );
+
+        jPanel2.add(jPanel11, java.awt.BorderLayout.LINE_START);
 
         pnlBody.addTab("Adoptions", jPanel2);
 
@@ -338,6 +664,211 @@ public class AdminFrame extends javax.swing.JFrame {
 
     private String getInput(String input){
         return getInput(input, false);
+    }
+    
+    private Adoption adoptionAsInput(){
+        Adoption res = new Adoption();
+        
+        String inputted_id = inpAdoptID.getText(),
+               inputted_kitten_id = inpKittyID.getText(),
+               adoptee = inpUsername.getText();
+        
+        if(inputted_id.isEmpty() || inputted_kitten_id.isEmpty() || adoptee.isEmpty()) return null;
+        
+        int status = cmbAdoptStatus.getSelectedIndex(),
+            id = Integer.parseInt(inputted_id),
+            kitten_id = Integer.parseInt(inputted_kitten_id);
+        
+        res.setId(id);
+        res.setUsername(adoptee);
+        res.setKitten_id(kitten_id);
+        res.setStatus(status);
+        
+        return res;
+    }
+    
+    private void showAvKittyList(Kitten current){
+        // Get search string
+        String searched = inpKittySearch.getText();
+        
+        // Filter according to search and pass it to be shown
+        KittenList res = new KittenList(current);
+        if(searched.isEmpty()) res.add(avKitty);
+        else res.add(avKitty.filter(searched, "name"));
+        
+        showKittyList(res);
+    }
+    
+    private void showKittyList(KittenList arr){
+        modKitty.clear();
+        for(Kitten k : arr.kittens){
+            modKitty.addElement(String.format("[%d] %s", k.getId(), k.getName()));
+        }
+        // Always select the first
+        if(arr.size() > 0) lstKitty.setSelectedIndex(0);
+    }
+    
+    private void showAvAdopt(){
+        // Get search query string
+        String query = inpAdoptSearch.getText();
+        
+        ArrayList<Adoption> res = new ArrayList<>();
+        if(query.isEmpty()) res.addAll(adoptions);
+        else{
+            for(Adoption a : adoptions){
+                Kitten k = all.get(a.getKitten_id());
+                String toCompareTo = String.format("[%d] %s-%s", a.getId(), a.getUsername(), k.getName());
+                
+                if(toCompareTo.contains(query)) res.add(a);
+            }
+        }
+        
+        // Update list
+        showAdoptList(res);
+    }
+    
+    private void showAvUser(){
+        // Get first the search query
+        String query = inpUserSearch.getText();
+        
+        ArrayList<String> res = new ArrayList<>();
+        if(query.isEmpty()) res.addAll(users);
+        else {
+            for(String u : users){
+                if(u.contains(query)) res.add(u);
+            }
+            // then also add current user on select if not included
+            if(!adopterOnAdoption.contains(query)) res.add(0, adopterOnAdoption);
+        }
+        
+        // Now show the list
+        showUserList(res);
+        
+        // Select the current user
+        if(!adopterOnAdoption.contains(query)) lstUser.setSelectedIndex(0);
+        else{
+            // find the index
+            int index = 0;
+            for(String u : res){
+                if(u.equals(adopterOnAdoption)) break;
+                index++;
+            }
+            lstUser.setSelectedIndex(index);
+        }
+        
+        
+    }
+    
+    private void showUserList(ArrayList<String> arr){
+        modUser.clear();
+        for(String username : arr){
+            modUser.addElement(username);
+        }
+    }
+    
+    private void showAdoptList(ArrayList<Adoption> arr){
+        modAdopt.clear();
+        for(Adoption a : arr){
+            Kitten k = all.get(a.getKitten_id());
+            modAdopt.addElement(String.format("[%d] %s-%s", a.getId(), a.getUsername(), k.getName()));
+        }
+    }
+    
+    private void listAdoptClick(ListSelectionEvent ev){
+        // Put values in the frame
+        String char_comb = lstAdopt.getSelectedValue();
+        
+        if(char_comb == null) return;
+        
+        Pattern p = Pattern.compile("\\d+", Pattern.MULTILINE);
+        
+        Matcher matcher = p.matcher(char_comb);
+        String match = "";
+        
+        if(matcher.find()){
+            match = matcher.group(0);
+            inpAdoptID.setText(match);
+        }else return;
+        
+        int adopt_id = Integer.parseInt(match);
+        
+        // Put inputs
+        inpAdoptID.setText(Integer.toString(adopt_id));
+        
+        Adoption target = null;
+        for(Adoption a : adoptions){
+            if(a.getId() == adopt_id){
+                target = a;
+                break;
+            }
+        }
+        
+        inpKittyID.setText(Integer.toString(target.getKitten_id()));
+        inpUsername.setText(target.getUsername());
+        inpAdoptExpiree.setText(target.getDate_expire().toString());
+        cmbAdoptStatus.setSelectedIndex(target.getStatus());
+        
+        // Get Current Adopting Kitty and Adopter
+        kittenOnAdoption = all.get(target.getKitten_id());
+        adopterOnAdoption = target.getUsername();
+        selectedAdoption = target;
+        
+        // Update showing kitten list
+        avKitty = all.getAllAvailable();
+        showAvKittyList(kittenOnAdoption);
+        
+        // Auto Select Adopting Adopter
+        int adopterIndex = 0;
+        for(String adopter : users){
+            if(adopter.equals(target.getUsername())) break;
+            adopterIndex++;
+        }
+        if(adopterIndex < users.size()) lstUser.setSelectedIndex(adopterIndex);
+        
+        // Disable Edit Button
+        btnAdoptEdit.setEnabled(false);
+        // And Enable what needs to be enabled
+        btnAdoptDelete.setEnabled(true);
+        inpUserSearch.setEnabled(true);
+        inpKittySearch.setEnabled(true);
+        btnClrKitty.setEnabled(true);
+        btnClrUser.setEnabled(true);
+        btnExtendDays.setEnabled(true);
+        cmbAdoptStatus.setEnabled(true);
+    }
+    
+    private void listUserClick(ListSelectionEvent ev){
+        btnAdoptEdit.setEnabled(true);
+        cmbAdoptStatus.setEnabled(false);
+        String selected = lstUser.getSelectedValue();
+        
+        if(selected == null) return;
+        
+        inpUsername.setText(selected);
+        adopterOnAdoption = selected;
+    }
+    
+    private void listKittyClick(ListSelectionEvent ev){
+        btnAdoptEdit.setEnabled(true);
+        cmbAdoptStatus.setEnabled(false);
+        
+        String char_comb = lstKitty.getSelectedValue();
+        
+        if(char_comb == null) return;
+        
+        Pattern p = Pattern.compile("\\d+", Pattern.MULTILINE);
+        
+        Matcher matcher = p.matcher(char_comb);
+        String match = "";
+        
+        if(matcher.find()){
+            match = matcher.group(0);
+        }else return;
+        
+        int kitten_id = Integer.parseInt(match);
+        
+        inpKittyID.setText(Integer.toString(kitten_id));
+        kittenOnAdoption = all.get(kitten_id);
     }
     
     private String getInput(String input, boolean nullable){
@@ -396,8 +927,18 @@ public class AdminFrame extends javax.swing.JFrame {
         return k;
     }
     
+    
+    private void openLogin(){
+        JFrame lf = new LoginFrame();
+        lf.setLocationRelativeTo(this);
+        lf.setVisible(true);
+        this.dispose();
+    }
+    
+    
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
         // TODO add your handling code here:
+        openLogin();
     }//GEN-LAST:event_btnLogOutActionPerformed
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
@@ -410,7 +951,7 @@ public class AdminFrame extends javax.swing.JFrame {
         
         SiomaiSupplyApp.c.addKitten(k);
         
-        setKittenList(SiomaiSupplyApp.c.queryKittens(200, 0));
+        setKittenList(SiomaiSupplyApp.c.queryKittensAll());
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void inpNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpNameActionPerformed
@@ -459,11 +1000,7 @@ public class AdminFrame extends javax.swing.JFrame {
         setShowingList(active_kittens);
     }//GEN-LAST:event_btnClearActionPerformed
 
-    private void inpKittenSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inpKittenSearchActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inpKittenSearchActionPerformed
-
-    private void inpKittenSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKittenSearchKeyTyped
+    private void inpKittenSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKittenSearchKeyReleased
         // TODO add your handling code here:
         String input = inpKittenSearch.getText();
         
@@ -476,7 +1013,117 @@ public class AdminFrame extends javax.swing.JFrame {
         res.add(active_kittens.filter(input, "breed"));
         
         setShowingList(res);
-    }//GEN-LAST:event_inpKittenSearchKeyTyped
+    }//GEN-LAST:event_inpKittenSearchKeyReleased
+
+    private void btnClrAdoptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClrAdoptActionPerformed
+        // TODO add your handling code here:
+        inpAdoptSearch.setText("");
+    }//GEN-LAST:event_btnClrAdoptActionPerformed
+
+    private void btnClrUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClrUserActionPerformed
+        // TODO add your handling code here:
+        inpUserSearch.setText("");
+        showAvUser();
+    }//GEN-LAST:event_btnClrUserActionPerformed
+
+    private void btnClrKittyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClrKittyActionPerformed
+        // TODO add your handling code here:
+        inpKittySearch.setText("");
+        showAvKittyList(kittenOnAdoption);
+    }//GEN-LAST:event_btnClrKittyActionPerformed
+
+    private void btnAdoptEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdoptEditActionPerformed
+        // TODO add your handling code here:
+        Adoption after = adoptionAsInput(),
+                 before = selectedAdoption;
+        
+        if(cmbAdoptStatus.getSelectedIndex() != Adoption.STATUS.ONGOING.ordinal()){
+            
+            // If status is changed, do the operations
+            switch(cmbAdoptStatus.getSelectedIndex()){
+                case 1: // successful
+                    SiomaiSupplyApp.c.verifyAdoption(before);
+                    break;
+                case 2: // cancel
+                    SiomaiSupplyApp.c.cancelAdoption(before);
+                    break;
+                case 3: // returned
+                    SiomaiSupplyApp.c.returnAdoption(before);
+                    break;
+            }
+            
+            retrieveData();
+            return;
+        }
+        
+        boolean res = SiomaiSupplyApp.c.updateAdoption(before, after);
+        
+        if(!res) return;
+        
+        // Do update of the frame
+        retrieveData();
+    }//GEN-LAST:event_btnAdoptEditActionPerformed
+
+    private void cmbAdoptStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAdoptStatusActionPerformed
+        // TODO add your handling code here:
+        
+        // Set edit button to enabled
+        btnAdoptEdit.setEnabled(true);
+    }//GEN-LAST:event_cmbAdoptStatusActionPerformed
+
+    private void inpUserSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpUserSearchKeyReleased
+        // TODO add your handling code here:
+        showAvUser();
+    }//GEN-LAST:event_inpUserSearchKeyReleased
+
+    private void inpKittySearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inpKittySearchKeyReleased
+        // TODO add your handling code here:
+        
+        showAvKittyList(kittenOnAdoption);
+    }//GEN-LAST:event_inpKittySearchKeyReleased
+
+    private void btnAdoptDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdoptDeleteActionPerformed
+        // TODO add your handling code here:
+        boolean res = SiomaiSupplyApp.c.cancelAdoption(selectedAdoption);
+        
+        if(!res) return;
+        
+        // Do update of the frame
+        retrieveData();
+    }//GEN-LAST:event_btnAdoptDeleteActionPerformed
+
+    private void pnlBodyStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_pnlBodyStateChanged
+        // TODO add your handling code here:
+        if(!hasInitiated) return;
+        
+        retrieveData();
+        refreshKittenTab();
+    }//GEN-LAST:event_pnlBodyStateChanged
+
+    private void btnExtendDaysActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExtendDaysActionPerformed
+        // TODO add your handling code here:
+        String inputted = inpExtendDays.getText();
+        
+        if(inputted.isEmpty()){
+            inpExtendDays.setText("");
+            return;
+        }
+        
+        int extension = 0;
+        
+        try {
+             extension = Integer.parseInt(inputted);
+             
+             if(extension < 1) throw new Exception();
+        }catch(Exception e){
+            inpExtendDays.setText("");
+            return;
+        }
+        
+        boolean res = SiomaiSupplyApp.c.extendAdoption(selectedAdoption, extension);
+        
+        if(res) retrieveData();
+    }//GEN-LAST:event_btnExtendDaysActionPerformed
 
     public void setKittenList(KittenList list){
         active_kittens = list;
@@ -547,34 +1194,66 @@ public class AdminFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdoptDelete;
+    private javax.swing.JButton btnAdoptEdit;
     private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnClrAdopt;
+    private javax.swing.JButton btnClrKitty;
+    private javax.swing.JButton btnClrUser;
     private javax.swing.JButton btnCreate;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnExtendDays;
     private javax.swing.JButton btnLogOut;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JComboBox<String> cmbAdoptStatus;
     private javax.swing.JComboBox<String> cmbStatus;
+    private javax.swing.JTextField inpAdoptExpiree;
+    private javax.swing.JTextField inpAdoptID;
+    private javax.swing.JTextField inpAdoptSearch;
     private javax.swing.JTextField inpBirth;
     private javax.swing.JTextField inpBreed;
     private javax.swing.JTextArea inpDesc;
+    private javax.swing.JTextField inpExtendDays;
     private javax.swing.JTextField inpID;
     private javax.swing.JTextField inpKittenSearch;
+    private javax.swing.JTextField inpKittyID;
+    private javax.swing.JTextField inpKittySearch;
     private javax.swing.JTextField inpName;
+    private javax.swing.JTextField inpUserSearch;
+    private javax.swing.JTextField inpUsername;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private final javax.swing.JList<String> listKitten = new javax.swing.JList<String>();
+    private final javax.swing.JList<String> lstAdopt = new javax.swing.JList<>();
+    private final javax.swing.JList<String> lstKitty = new javax.swing.JList<>();
+    private final javax.swing.JList<String> lstUser = new javax.swing.JList<>();
     private javax.swing.JLabel output;
     private javax.swing.JTabbedPane pnlBody;
     private javax.swing.JPanel pnlHeader;

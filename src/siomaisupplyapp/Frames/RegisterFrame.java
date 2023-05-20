@@ -384,14 +384,29 @@ public class RegisterFrame extends javax.swing.JFrame {
         }
         
         // Check if password and confirmpassword is the same
-        if(!inpPass.getPassword().equals(inpConPass.getPassword())){
+        if(!new String(inpPass.getPassword()).equals(new String(inpConPass.getPassword()))){
             output.setText("Password does not match");
+            return;
+        }
+        
+        // Check if email is valid
+        if(!inpEmail.getText().isEmpty() && !User.validateEmail(inpEmail.getText())){
+            output.setText("Email is not a valid email");
             return;
         }
         
         boolean c = chkEmployee.isSelected();
         User u ;
         
+        if(!c && (inpContact.getText().isEmpty() || inpAddress.getText().isEmpty())){
+            output.setText("Please fill all the required fields");
+            return;
+        }
+        
+        if(!c && !Adopter.validateNumber(inpContact.getText())){
+            output.setText("Contact# is not a valid contact#");
+            return;
+        }
         if(c) u = new Staff(inpUser.getText(), inpPass.getText(), inpEmail.getText());
         else u = new Adopter(inpUser.getText(), inpPass.getText(), inpEmail.getText(), inpAddress.getText(), inpContact.getText());
       

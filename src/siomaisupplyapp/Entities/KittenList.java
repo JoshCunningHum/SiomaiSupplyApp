@@ -42,6 +42,14 @@ public class KittenList {
         kittens.add(k);
     }
     
+    public void add(Kitten ...kittens){
+        this.kittens.addAll(Arrays.asList(kittens));
+    }
+    
+    public void add(ArrayList<Kitten> array){
+        kittens.addAll(array);
+    }
+    
     public void clear(){
         kittens.clear();
     }
@@ -59,6 +67,32 @@ public class KittenList {
         for(Kitten k : kittens){
             System.out.println(k.toString());
         }
+    }
+    
+    public KittenList getAllAvailable(){
+        KittenList l = new KittenList();
+        for(Kitten k : kittens){
+            if(k.getStatus() == Kitten.STATUS.AVAILABLE.ordinal()) l.add(k);
+        }
+        return l;
+    }
+    
+    public int size(){
+        return kittens.size();
+    }
+    
+    public void print(){
+        for(Kitten k : kittens){
+            System.out.println(k.toString());
+        }
+    }
+    
+    public KittenList page(int index, int limit){
+        KittenList res = new KittenList();
+        int offset = index * limit;
+        if(offset > size()) return res;
+        res.kittens.addAll(kittens.subList(offset, (offset + limit >= size() ? size() : offset + limit)));
+        return res;
     }
     
     public KittenList filter(String value, String category){

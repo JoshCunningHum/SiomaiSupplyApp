@@ -19,58 +19,58 @@ public class UnfinishedWhereClause<N extends Conditional<N>>{
         this.operator = operator;
     }
     
-    public Conditional<N> where(String clause){
+    public N where(String clause){
         q.whrs().append(operator).append(" ").append(clause).append(" ");
-        return q;
+        return (N) q;
     }
 
-    public Conditional<N> like(String column, Object value){
+    public N like(String column, Object value){
         String v = (value instanceof String) ? "'" + value + "'" : value.toString();
         return where(column + " LIKE " + v);
     }
     
-    public Conditional<N> whereEqual(String column, Object value){
+    public N whereEqual(String column, Object value){
         String v = (value instanceof String) ? "'" + value + "'" : value.toString();
         return where(column + "=" + v);
     }
     
-    public Conditional<N> whereNot(String column, Object value){
+    public N whereNot(String column, Object value){
         String v = (value instanceof String) ? "'" + value + "'" : value.toString();
         return where(column + "<>" + v);
     }
     
-    public Conditional<N> whereLess(String column, int value){
+    public N whereLess(String column, int value){
        return where(column + "<" + value);
     }
     
-    public Conditional<N> whereLess(String column, double value){
+    public N whereLess(String column, double value){
        return where(column + "<" + value);
     }
     
     
-    public Conditional<N> whereLessEqual(String column, int value){
+    public N whereLessEqual(String column, int value){
        return where(column + "<=" + value);
     }
     
-    public Conditional<N> whereLessEqual(String column, double value){
+    public N whereLessEqual(String column, double value){
        return where(column + "<=" + value);
     }
     
     
-    public Conditional<N> whereGreater(String column, int value){
+    public N whereGreater(String column, int value){
        return where(column + ">" + value);
     }
     
-    public Conditional<N> whereGreater(String column, double value){
+    public N whereGreater(String column, double value){
        return where(column + ">" + value);
     }
     
     
-    public Conditional<N> whereGreaterEqual(String column, int value){
+    public N whereGreaterEqual(String column, int value){
        return where(column + ">=" + value);
     }
     
-    public Conditional<N> whereGreaterEqual(String column, double value){
+    public N whereGreaterEqual(String column, double value){
        return where(column + ">=" + value);
     }
 }
