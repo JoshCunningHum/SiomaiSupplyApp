@@ -43,8 +43,8 @@ public class LoginFrame extends javax.swing.JFrame {
         inpUser = new javax.swing.JTextField();
         jlabel2 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
-        inpPass = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        inpPass = new javax.swing.JPasswordField();
         output = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         btnRegister = new javax.swing.JButton();
@@ -91,14 +91,14 @@ public class LoginFrame extends javax.swing.JFrame {
                     .addComponent(jlabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("Password");
+
         inpPass.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inpPassKeyPressed(evt);
             }
         });
-
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("Password");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -114,8 +114,8 @@ public class LoginFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(inpPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inpPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         output.setForeground(new java.awt.Color(255, 51, 51));
@@ -219,7 +219,7 @@ public class LoginFrame extends javax.swing.JFrame {
             return;
         }
         
-        String username = inpUser.getText(), p = inpPass.getText();
+        String username = inpUser.getText(), p = new String(inpPass.getPassword());
         
         LOGIN isSuccessful = SiomaiSupplyApp.c.loginUser(username, p);
         
@@ -259,7 +259,7 @@ public class LoginFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private boolean check(){
-        return (inpPass.getText().equals("")) || (inpUser.getText().equals(""));
+        return (new String(inpPass.getPassword()).equals("")) || (inpUser.getText().equals(""));
     }
     
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
@@ -328,7 +328,7 @@ public class LoginFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnRegister;
-    private javax.swing.JTextField inpPass;
+    private javax.swing.JPasswordField inpPass;
     private javax.swing.JTextField inpUser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
