@@ -15,7 +15,7 @@ public class SiomaiSupplyApp {
      
     // !!! CHANGE SETTINGS HERE !!!
     private static final int PORT = 3306;
-    private static final String DB = "kittenrescuedb";
+    private static final String DB = "kittenrescuedb1";
     
     
     public static Connect c;

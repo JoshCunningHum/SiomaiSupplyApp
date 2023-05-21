@@ -4,7 +4,14 @@
  */
 package siomaisupplyapp.Frames;
 
+import java.awt.Desktop;
 import java.awt.GridLayout;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import siomaisupplyapp.Entities.Kitten;
 import siomaisupplyapp.Entities.KittenList;
@@ -271,8 +278,36 @@ public final class HubFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public static boolean openWebpage(URI uri) {
+    Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+    if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+        try {
+            desktop.browse(uri);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    return false;
+}
+
+public static boolean openWebpage(URL url) {
+    try {
+        return openWebpage(url.toURI());
+    } catch (URISyntaxException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+    
     private void btnSupportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupportActionPerformed
-        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            URL link = new URL("https://www.facebook.com/catsofcebuitpark");
+            openWebpage(link);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(HubFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnSupportActionPerformed
 
     private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
